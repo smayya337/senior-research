@@ -2,7 +2,12 @@
 name = "senior-research"
 version = "0.1.0"
 edition = "2018"
+authors = ["Shreyas Mayya"]
+license = "MIT"
+description = "An attempt at a shell."
+repository = "https://github.com/smayya337/senior-research"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+regex = "1.5.4"
