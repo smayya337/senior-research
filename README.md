@@ -1,4 +1,5 @@
 # Senior Research
 
-This repository will contain files for my senior research project. Stay tuned!
-(Current project idea: a shell in Rust!)
+This repository contains the source code for my
+senior research project, a Unix shell in Rust!
+(Name suggestions are appreciated.)
