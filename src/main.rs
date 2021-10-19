@@ -1,11 +1,24 @@
+mod exec;
 mod parser;
 
 use std::io::stdin;
+use crate::parser::separate;
+use crate::exec::exec;
 
 fn main() {
     info();
     loop {
-        let input = read();
+        let mut input: String = read();
+
+        input.truncate(input.len() - 1);
+        let (cmd, vec) = separate(&input);
+        let success = match cmd {
+            Some(x) => exec(x, vec),
+            None => true,
+        };
+        if !success {
+            eprintln!("{}: command not found...", cmd.expect("This should not happen."));
+        }
     }
 }
 
