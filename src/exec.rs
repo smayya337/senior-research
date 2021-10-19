@@ -1,7 +1,7 @@
-use std::process::{Child, Command, ExitStatus};
+use std::process::{Command};
 
 pub fn exec(command: &str, args: Vec<&str>) -> bool {
-    let mut child = Command::new(command)
+    let child = Command::new(command)
         .args(args)
         .spawn();
     if child.is_err() {
