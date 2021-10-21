@@ -5,7 +5,8 @@ use std::process::{Command};
 pub fn exec(command: &str, args: Vec<&str>) -> bool {
     return match command {
         "cd" => {
-            cd(args)
+            let dest = args.first();
+            cd(dest)
         },
         _ => {
             let child = Command::new(command)
@@ -21,14 +22,27 @@ pub fn exec(command: &str, args: Vec<&str>) -> bool {
     }
 }
 
-fn cd(args: Vec<&str>) -> bool {
-    return match args.first() {
+fn cd(dest: Option<&&str>) -> bool {
+    return match dest {
         Some(x) => {
-            let new_path = Path::new(x);
+            let mut new_path = Path::new(x);
+            let dd = dotdot();
+            if x.eq(&"~") {
+                new_path = Path::new("/home/shreyas");
+            }
+            else if x.eq(&"..") {
+                new_path = Path::new(&dd);
+            }
             let chdir = env::set_current_dir(&new_path);
-            assert!(env::set_current_dir(&new_path).is_ok());
             chdir.is_ok()
         },
-        None => cd(Vec::from(["~"])),
+        None => cd(Some(&"~")),
     }
+}
+
+fn dotdot() -> String {
+    let path = env::current_dir();
+    let mut buf = path.expect("This should not happen.");
+    buf.pop();
+    return buf.display().to_string();
 }
