@@ -4,6 +4,9 @@ mod parser;
 use std::io::{self, stdin, Write};
 use crate::parser::separate;
 use crate::exec::exec;
+use users;
+use hostname;
+use std::env;
 
 fn main() {
     info();
@@ -24,8 +27,7 @@ fn main() {
 
 fn read() -> String {
     let mut input: String = String::new();
-    print!("shreyas@shreyas-laptop ~ $ ");
-    io::stdout().flush().unwrap();
+    prompt();
     stdin().read_line(&mut input)
         .expect("Failed to read line");
     input
@@ -43,4 +45,13 @@ fn info() {
     println!("Version {}", version);
     println!("By {}", authors);
     println!("Available at {} under the {} license.", repo, license);
+}
+
+fn prompt() {
+    let username = users::get_current_username().expect("ERROR");
+    let host = hostname::get().expect("ERROR");
+    let cwd_buf = env::current_dir().expect("ERROR");
+    let cwd = cwd_buf.to_str().expect("ERROR");
+    print!("{}@{} {} $ ", username.to_str().expect("ERROR"), host.to_str().expect("ERROR"), cwd);
+    io::stdout().flush().unwrap();
 }
