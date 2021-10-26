@@ -1,6 +1,7 @@
 use std::env;
 use std::path::Path;
 use std::process::{Command};
+use home;
 
 pub fn exec(command: &str, args: Vec<&str>) -> bool {
     return match command {
@@ -26,9 +27,10 @@ fn cd(dest: Option<&&str>) -> bool {
     return match dest {
         Some(x) => {
             let mut new_path = Path::new(x);
+            let homedir = home::home_dir().expect("No home dir set!").display().to_string();
             let dd = dotdot();
             if x.eq(&"~") {
-                new_path = Path::new("/home/shreyas");
+                new_path = Path::new(&homedir);
             }
             else if x.eq(&"..") {
                 new_path = Path::new(&dd);
