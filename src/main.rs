@@ -1,7 +1,7 @@
 mod exec;
 mod parser;
 
-use std::io::stdin;
+use std::io::{self, stdin, Write};
 use crate::parser::separate;
 use crate::exec::exec;
 
@@ -24,8 +24,9 @@ fn main() {
 
 fn read() -> String {
     let mut input: String = String::new();
+    print!("shreyas@shreyas-laptop ~ $ ");
+    io::stdout().flush().unwrap();
     stdin().read_line(&mut input)
-        .ok()
         .expect("Failed to read line");
     input
 }
