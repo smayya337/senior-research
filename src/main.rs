@@ -1,9 +1,11 @@
 mod exec;
 mod parser;
+mod history;
 
 use std::io::{self, stdin, Write};
 use crate::parser::separate;
 use crate::exec::exec;
+use crate::history::{cmd_time, write_history};
 use users;
 use hostname;
 use std::env;
@@ -14,14 +16,16 @@ fn main() {
         let mut input: String = read();
 
         input.truncate(input.len() - 1);
+        let time = cmd_time();
         let (cmd, vec) = separate(&input);
-        let success = match cmd {
+        let ecode = match cmd {
             Some(x) => exec(x, vec),
-            None => true,
+            None => 0,
         };
-        if !success {
+        if ecode == 127 {
             eprintln!("{}: command not found...", cmd.expect("This should not happen."));
         }
+        write_history(time, &input);
     }
 }
 
