@@ -1,9 +1,9 @@
 use std::env;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::{Command};
 use home;
 
-pub fn exec(command: &str, args: Vec<&str>) -> bool {
+pub fn exec(command: &str, args: Vec<&str>) -> i32 {
     return match command {
         "cd" => {
             let dest = args.first();
@@ -13,38 +13,53 @@ pub fn exec(command: &str, args: Vec<&str>) -> bool {
             let child = Command::new(command)
                 .args(args)
                 .spawn();
-            if child.is_err() {
-                return false;
-            }
-            let ecode = child.expect("This should never happen.").wait()
-                .expect("Failed to wait on child").success();
+            let ecode = match child {
+                Ok(x) => {
+                    let mut y = x;
+                    y.wait()
+                        .expect("Failed to wait on child").code().expect("This should not happen.")
+                },
+                Err(_) => 127,
+            };
             ecode
         },
     }
 }
 
-fn cd(dest: Option<&&str>) -> bool {
+fn cd(dest: Option<&&str>) -> i32 {
     return match dest {
         Some(x) => {
-            let mut new_path = Path::new(x);
             let homedir = home::home_dir().expect("No home dir set!").display().to_string();
-            let dd = dotdot();
-            if x.eq(&"~") {
-                new_path = Path::new(&homedir);
+            let mut canon = String::from(*x);
+            if x.starts_with(&"~") {
+                canon = canon.replace("~", &homedir);
             }
-            else if x.eq(&"..") {
-                new_path = Path::new(&dd);
+            else if x.contains(&"..") {
+                let mut spl = x.split("..").peekable();
+                let mut np = Vec::new();
+                while let Some(y) = spl.next() {
+                    let p = match spl.peek() {
+                        Some(_) => dotdot(PathBuf::from(y)),
+                        None => String::from(y),
+                    };
+                    np.push(p);
+                }
+                canon = np.join("/");
             }
+            let new_path = Path::new(&canon);
             let chdir = env::set_current_dir(&new_path);
-            chdir.is_ok()
+            if chdir.is_ok() {
+                0
+            }
+            else {
+                1
+            }
         },
         None => cd(Some(&"~")),
     }
 }
 
-fn dotdot() -> String {
-    let path = env::current_dir();
-    let mut buf = path.expect("This should not happen.");
+fn dotdot(mut buf: PathBuf) -> String {
     buf.pop();
     return buf.display().to_string();
 }
