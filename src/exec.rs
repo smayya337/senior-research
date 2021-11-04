@@ -1,13 +1,17 @@
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::{Command};
-use home;
+use crate::parser::canonical_path;
+
 
 pub fn exec(command: &str, args: Vec<&str>) -> i32 {
     return match command {
         "cd" => {
             let dest = args.first();
             cd(dest)
+        },
+        "info" => {
+            info()
         },
         _ => {
             let child = Command::new(command)
@@ -29,23 +33,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> i32 {
 fn cd(dest: Option<&&str>) -> i32 {
     return match dest {
         Some(x) => {
-            let homedir = home::home_dir().expect("No home dir set!").display().to_string();
-            let mut canon = String::from(*x);
-            if x.starts_with(&"~") {
-                canon = canon.replace("~", &homedir);
-            }
-            else if x.contains(&"..") {
-                let mut spl = x.split("..").peekable();
-                let mut np = Vec::new();
-                while let Some(y) = spl.next() {
-                    let p = match spl.peek() {
-                        Some(_) => dotdot(PathBuf::from(y)),
-                        None => String::from(y),
-                    };
-                    np.push(p);
-                }
-                canon = np.join("/");
-            }
+            let canon = canonical_path(x);
             let new_path = Path::new(&canon);
             let chdir = env::set_current_dir(&new_path);
             if chdir.is_ok() {
@@ -59,7 +47,17 @@ fn cd(dest: Option<&&str>) -> i32 {
     }
 }
 
-fn dotdot(mut buf: PathBuf) -> String {
-    buf.pop();
-    return buf.display().to_string();
+fn info() -> i32 {
+    let name = env!("CARGO_PKG_NAME");
+    let desc = env!("CARGO_PKG_DESCRIPTION");
+    let version = env!("CARGO_PKG_VERSION");
+    let authors = str::replace(env!("CARGO_PKG_AUTHORS"), ":", ", ");
+    let license = env!("CARGO_PKG_LICENSE");
+    let repo = env!("CARGO_PKG_REPOSITORY");
+    println!("{}", name);
+    println!("{}", desc);
+    println!("Version {}", version);
+    println!("By {}", authors);
+    println!("Available at {} under the {} license.", repo, license);
+    0
 }
