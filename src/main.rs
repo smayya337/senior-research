@@ -5,14 +5,14 @@ mod history;
 use std::io::{self, stdin, Write};
 use crate::parser::separate;
 use crate::exec::exec;
-use crate::history::{cmd_time, write_history};
+use crate::history::{cmd_time, read_history, write_history};
 use users;
 use hostname;
 use std::env;
 
 fn main() {
-    info();
     loop {
+        let shell_history = read_history();
         let mut input: String = read();
 
         input.truncate(input.len() - 1);
@@ -35,20 +35,6 @@ fn read() -> String {
     stdin().read_line(&mut input)
         .expect("Failed to read line");
     input
-}
-
-fn info() {
-    let name = env!("CARGO_PKG_NAME");
-    let desc = env!("CARGO_PKG_DESCRIPTION");
-    let version = env!("CARGO_PKG_VERSION");
-    let authors = str::replace(env!("CARGO_PKG_AUTHORS"), ":", ", ");
-    let license = env!("CARGO_PKG_LICENSE");
-    let repo = env!("CARGO_PKG_REPOSITORY");
-    println!("{}", name);
-    println!("{}", desc);
-    println!("Version {}", version);
-    println!("By {}", authors);
-    println!("Available at {} under the {} license.", repo, license);
 }
 
 fn prompt() {
