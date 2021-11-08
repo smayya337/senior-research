@@ -21,7 +21,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> i32 {
                 Ok(x) => {
                     let mut y = x;
                     y.wait()
-                        .expect("Failed to wait on child").code().expect("This should not happen.")
+                        .unwrap().code().unwrap()
                 },
                 Err(_) => 127,
             };
