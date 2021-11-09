@@ -1,0 +1,132 @@
+\documentclass[12pt]{article}
+
+%
+%Margin - 1 inch on all sides
+%
+\usepackage[letterpaper]{geometry}
+\usepackage{times}
+\geometry{top=1.0in, bottom=1.0in, left=1.0in, right=1.0in}
+
+%
+%Doublespacing
+%
+\usepackage{setspace}
+\doublespacing
+
+%
+%Rotating tables (e.g. sideways when too long)
+%
+\usepackage{rotating}
+
+
+%
+%Fancy-header package to modify header/page numbering (insert last name)
+%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{} 
+\chead{} 
+\rhead{} 
+\lfoot{} 
+\cfoot{} 
+\rfoot{} 
+\renewcommand{\headrulewidth}{0pt} 
+\renewcommand{\footrulewidth}{0pt} 
+%To make sure we actually have header 0.5in away from top edge
+%12pt is one-sixth of an inch. Subtract this from 0.5in to get headsep value
+\setlength\headsep{0.333in}
+
+%
+%Add space between paragraphs - NOT MLA
+%
+\setlength{\parskip}{12pt}
+
+%
+%Works cited environment
+%(to start, use \begin{workscited...}, each entry preceded by \bibent)
+	% - from Ryan Alcock's MLA style file
+	%
+
+	\newcommand{\bibent}{\noindent \hangindent 40pt}
+	\newenvironment{workscited}{}{\newpage }
+		
+	
+	%
+	%Begin document
+	%
+	\begin{document}
+		\begin{flushleft}
+			
+			%%%%First page name, class, etc
+			Shreyas Mayya\\
+			Computer Systems Lab\\
+			22 October 2021\\
+			Kosek\\
+			
+			
+			%%%%Title
+			\begin{center}
+				{\huge Project Proposal\par}
+			\end{center}
+			
+			
+			%%%%Changes paragraph indentation to 0.5in
+			%%%%\setlength{\parindent}{0.5in}
+			%%%%Set to 0 - IMPROPER MLA
+			\setlength{\parindent}{0pt}
+			%%%%Begin body of paper here
+			
+			{\large Title\par}
+			\noindent Implementation of a Command-Line Unix Shell
+			
+			{\large Abstract\par}
+			\indent A command-line shell (or command-line interpreter) is a program that allows the user to enter and execute commands. This project aims to implement a command-line shell for Unix-based operating systems. The program will be written in Rust, a systems programming-oriented language with an emphasis on memory safety. This shell aims to include many of the features present in modern Unix shells, including reading commands from scripts, environment variables, and control flow structures like loops, conditions, and pipes.
+			
+			{\large Objective\par}
+			The objective of this project is to write a working command-line Unix shell. It should provide a read-eval-print loop (REPL) for interactive input of commands, as well as support for non-interactive scripts and file-based command input. This program should also support many of the features of pre-existing shells, such as conditionals, loops, redirects, pipes, subshells, and environment variables.
+			
+			{\large Background\par}
+			A shell refers to any program that allows a user to interact with a computer’s operating system. In general usage, the term is mostly used to refer to a command-line shell (or command-line interpreter). These programs provide an interface for the user to input commands following a specific syntax, then parse and evaluate the output. Many also offer the ability to read commands from a script, as well as features like redirection and pipelines.
+
+			Unix in the context of this project refers to a family of operating systems derived from and inspired by the Unix operating system. Unix was originally written in 1969 at AT\&T Bell Labs by Ken Thompson, Dennis Ritchie, and their collaborators for the DEC PDP-7 minicomputer (“History”). Its derivatives include the original Berkeley Software Distribution (BSD), released in 1984 by the University of California, Berkeley. BSD’s derivatives include FreeBSD, OpenBSD, and MacOS. Unix-inspired operating systems include the Linux family of operating systems.
+
+			Linux can refer to the Linux operating system, written by Linus Torvalds in 1991, or more commonly to the family of operating systems derived from the original Linux and using the Linux kernel. Linux was originally written by Torvalds for the x86 platform as an experiment regarding the features available to such CPUs, and as such was confined to that platform during its first years of development (Torvalds 2). The first successful port of Linux to a different CPU architecture was to the Motorola 680x0 family, and since then Linux has become famous for its portability, with Linux ports available for most major architectures. The Linux kernel is a monolithic system (in contrast to microkernels, which are made up of smaller kernels that work in harmony), and Linux’s main goals include simplicity, efficiency, and compatibility (Torvalds 7). Linux is Unix-inspired; it is not derived directly from the original Unix or a derivative, but aims to follow Unix standards and provide all the relevant Unix behavior expected of it by its users (Torvalds 17).
+
+			The first shell for Unix was developed by Ken Thompson in 1971. It operated as a standalone user program and achieved a compact size by keeping functions in separate programs, such as \verb|glob| (which handled parameter expansion) and \verb|if| statements. The Thompson shell is notable for introducing the file redirection syntax that is ubiquitous among Unix shells today, using symbols like \verb|<|, \verb|>|, and \verb|>>| to pipe command output into files. Another major development came in 1977, when Stephen Bourne created the shell that bears his name. The Bourne shell added scripting capabilities to traditional interactive functions, with more advanced control structures, as well as features such as command substitution. The Bourne shell serves as the ancestor of many modern Unix shells, including \verb|bash|, the Bourne-again shell, which is the default on many Unix-based operating systems. Other notable shells include the C shell \verb|csh|, the Korn shell \verb|ksh|, and the Z shell \verb|zsh|, which all include additional features and syntax variations. Unix shells have traditionally been written in the C programming language, which was originally developed to be the language of choice for Unix.
+
+			Rust is a programming language for “developing reliable and efficient systems” ~\cite{rust}. It is intended for systems programming and aims to give users “control over the running time and memory usage of their programs” (Matsakis and Klock 103) while still offering memory safety by eschewing such traditional features as a garbage collector (which aims to recover no-longer-referenced memory) in favor of a system of ownership. The ownership system provides a framework for passing objects and references to objects to various owners in the program, so that referenced objects can be deallocated when the owner is (Matsakis and Klock 103).
+
+			{\large Methods\par}
+			In order to achieve its objective of implementing a command-line shell’s functionality, this project will be written in the Rust programming language due to Rust’s emphasis on memory safety, rich standard library and package ecosystem, informative documentation, and rising profile in the systems programming community. It will implement a REPL that reads input through \verb|/dev/stdin|, uses a custom-written parser to analyze the components of the command, runs the appropriate programs, and prints the output to \verb|/dev/stdout| and \verb|/dev/stderr| as appropriate. Rust’s \verb|std::process::Command| will be used for executing commands. It is currently unclear what the best way to incorporate functionality for environment variables, redirection, and pipes are, and these features may serve as a source of difficulty for this project. Additional research is required in order to develop solutions for these things.
+
+			{\large Materials\par}
+			This project requires the Rust programming language and standard library, along with the \verb|rustc| compiler. Rust version 1.55 will be used to build this project, and the \verb|cargo| package manager will be used to manage required dependencies for this project. The project will be built and tested on a Linux system.
+
+			{\large References\par}
+			%%%%Works cited
+			\begin{workscited}
+
+				\bibent
+				“History and Timeline.” \textit{The UNIX System -- History and Timeline -- UNIX History}, The Open
+				Group, https://unix.org/what\_is\_unix/history\_timeline.html.
+
+				\bibent
+				Jones, M. “Evolution of Shells in Linux.” \textit{IBM Developer}, IBM, 6 Dec. 2011,
+				https://developer.ibm.com/tutorials/l-linux-shells/.
+
+				\bibent
+				Matsakis, Nicholas D., and Felix S. Klock. “The Rust Language.” \textit{Proceedings of the 2014 ACM
+				SIGAda Annual Conference on High Integrity Language Technology}, Dec. 2014, pp. 
+				103–104., https://doi.org/10.1145/2663171.2663188. 
+				
+				\bibent
+				Torvalds, Linus Benedict. \textit{Linux: A Portable Operating System}, University of Helsinki,
+				University of Helsinki, 10 Apr. 2019,
+				https://www.cs.helsinki.fi/u/kutvonen/index\_files/linus.pdf.
+				Accessed 12 Oct. 2021.
+				
+			\end{workscited}
+			
+		\end{flushleft}
+	\end{document}
+	\}
