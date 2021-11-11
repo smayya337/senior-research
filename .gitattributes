@@ -1,1 +1,3 @@
-tex/* linguist-documentation
+# Papers and citations
+*.tex linguist-documentation
+*.bib linguist-documentation
