@@ -1,20 +1,28 @@
+use crate::parser::canonical_path;
 use std::fs::OpenOptions;
+use std::io::prelude::*;
 use std::io::BufReader;
 use std::time::SystemTime;
-use std::io::prelude::*;
-use crate::parser::canonical_path;
 
 pub fn write_history(time: u64, command: &str) {
     let log = format!(": {}:{};{}", time, cmd_time() - time, command);
     let filepath = canonical_path(&"~/.shell_history");
-    let mut file = OpenOptions::new().create(true).write(true).append(true).open(filepath).unwrap();
+    let mut file = OpenOptions::new()
+        .create(true)
+        .write(true)
+        .append(true)
+        .open(filepath)
+        .unwrap();
     if writeln!(file, "{}", log).is_err() {
         eprintln!("Couldn't write history to file");
     }
 }
 
 pub fn cmd_time() -> u64 {
-    SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).expect("This happened before the Unix Epoch!").as_secs()
+    SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .expect("This happened before the Unix Epoch!")
+        .as_secs()
 }
 
 pub fn read_history() -> Vec<String> {

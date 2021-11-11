@@ -1,32 +1,26 @@
+use crate::parser::canonical_path;
 use std::env;
 use std::path::Path;
-use std::process::{Command};
-use crate::parser::canonical_path;
-
+use std::process::Command;
 
 pub fn exec(command: &str, args: Vec<&str>) -> i32 {
     return match command {
         "cd" => {
             let dest = args.first();
             cd(dest)
-        },
-        "info" => {
-            info()
-        },
+        }
+        "info" => info(),
         _ => {
-            let child = Command::new(command)
-                .args(args)
-                .spawn();
+            let child = Command::new(command).args(args).spawn();
             match child {
                 Ok(x) => {
                     let mut y = x;
-                    y.wait()
-                        .unwrap().code().unwrap()
-                },
+                    y.wait().unwrap().code().unwrap()
+                }
                 Err(_) => 127,
             }
-        },
-    }
+        }
+    };
 }
 
 fn cd(dest: Option<&&str>) -> i32 {
@@ -37,13 +31,12 @@ fn cd(dest: Option<&&str>) -> i32 {
             let chdir = env::set_current_dir(&new_path);
             if chdir.is_ok() {
                 0
-            }
-            else {
+            } else {
                 1
             }
-        },
+        }
         None => cd(Some(&"~")),
-    }
+    };
 }
 
 fn info() -> i32 {
