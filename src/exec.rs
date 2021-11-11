@@ -17,15 +17,14 @@ pub fn exec(command: &str, args: Vec<&str>) -> i32 {
             let child = Command::new(command)
                 .args(args)
                 .spawn();
-            let ecode = match child {
+            match child {
                 Ok(x) => {
                     let mut y = x;
                     y.wait()
                         .unwrap().code().unwrap()
                 },
                 Err(_) => 127,
-            };
-            ecode
+            }
         },
     }
 }

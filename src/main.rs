@@ -6,8 +6,6 @@ use std::io::{self, stdin, Write};
 use crate::parser::separate;
 use crate::exec::exec;
 use crate::history::{cmd_time, read_history, write_history};
-use users;
-use hostname;
 use std::env;
 
 fn main() {
