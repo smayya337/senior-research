@@ -1,7 +1,7 @@
 use crate::parser::canonical_path;
 use std::env;
 use std::path::Path;
-use std::process::Command;
+use std::process::{exit, Command};
 
 pub fn exec(command: &str, args: Vec<&str>) -> i32 {
     return match command {
@@ -10,6 +10,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> i32 {
             cd(dest)
         }
         "info" => info(),
+        "exit" => exit(0),
         _ => {
             let child = Command::new(command).args(args).spawn();
             match child {
