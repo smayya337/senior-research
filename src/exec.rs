@@ -2,6 +2,7 @@ use crate::parser::canonical_path;
 use std::env;
 use std::path::Path;
 use std::process::{exit, Command};
+use crate::history::display_history;
 
 pub fn exec(command: &str, args: Vec<&str>) -> i32 {
     return match command {
@@ -10,7 +11,9 @@ pub fn exec(command: &str, args: Vec<&str>) -> i32 {
             cd(dest)
         }
         "info" => info(),
+        "urmom" => urmom(),
         "exit" => exit(0),
+        "history" => display_history(),
         _ => {
             let child = Command::new(command).args(args).spawn();
             match child {
@@ -52,5 +55,12 @@ fn info() -> i32 {
     println!("Version {}", version);
     println!("By {}", authors);
     println!("Available at {} under the {} license.", repo, license);
+    0
+}
+
+fn urmom() -> i32 {
+    for i in 0..1000 {
+        println!("UR MOM");
+    }
     0
 }
