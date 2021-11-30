@@ -17,8 +17,7 @@ use termion::raw::IntoRawMode;
 
 fn main() {
     loop {
-        let shell_history = read_history();
-        let stdin: Option<String> = new_read();
+        let stdin: Option<String> = read();
         // new_read();
         if stdin.is_some() {
             let mut input = stdin.unwrap();
@@ -31,7 +30,9 @@ fn main() {
             if ecode == 127 {
                 eprintln!("{}: command not found...", cmd.unwrap());
             }
-            write_history(time, &input);
+            if cmd.is_some() && cmd.unwrap().ne("history") {
+                write_history(time, &input);
+            }
         }
     }
 }
@@ -43,37 +44,6 @@ fn read() -> Option<String> {
     let mut stdin = stdin.lock();
     input = stdin.read_line().unwrap().unwrap();
     return Some(input);
-}
-
-fn new_read() -> Option<String> {
-    // TODO: stop this from eating up first character of each line
-    let mut stdout = stdout();
-    let mut stdin = termion::async_stdin().keys();
-    let mut cmd = String::new();
-    prompt();
-    loop {
-        let input = stdin.next();
-        if let Some(Ok(key)) = input {
-            match key {
-                // TODO: make this not need enter to work
-                termion::event::Key::Ctrl('h') => println!("BRO"),
-                termion::event::Key::Ctrl('c') => {
-                    // TODO: stop this from exiting the whole program
-                    stdout.flush().unwrap();
-                    return None;
-                }
-                termion::event::Key::Char('\n') => break,
-                termion::event::Key::Char(x) => {
-                    println!("Typed key {}", x);
-                    cmd.push(x);
-                stdout.lock().flush().unwrap();
-                },
-                _ => (),
-            }
-        }
-        thread::sleep(time::Duration::from_millis(50));
-    }
-    return Some(cmd);
 }
 
 fn prompt() {
