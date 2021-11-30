@@ -2,6 +2,7 @@ use crate::parser::canonical_path;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::iter::Enumerate;
 use std::time::SystemTime;
 
 pub fn write_history(time: u64, command: &str) {
@@ -38,4 +39,13 @@ pub fn read_history() -> Vec<String> {
         shell_history.push(String::from(cmd));
     }
     shell_history
+}
+
+pub fn display_history() -> i32 {
+    let shell_history = read_history();
+    for (i, x) in shell_history.iter().enumerate() {
+        let cmd = x.split(";").last().unwrap();
+        println!("{} {}", i + 1, cmd);
+    }
+    0
 }
