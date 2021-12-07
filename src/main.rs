@@ -5,22 +5,17 @@ mod history;
 mod parser;
 
 use crate::exec::exec;
-use crate::history::{cmd_time, read_history, write_history};
+use crate::history::{cmd_time, write_history};
 use crate::parser::separate;
-use std::{env, thread, time};
-use std::ffi::OsString;
-use std::io::{self, stdin, stdout, Write};
-use std::process::exit;
-use termion::event::{Event, Key};
+use std::env;
+use std::io::{stdin, stdout, Write};
 use termion::input::TermRead;
-use termion::raw::IntoRawMode;
 
 fn main() {
     loop {
         let stdin: Option<String> = read();
-        // new_read();
         if stdin.is_some() {
-            let mut input = stdin.unwrap();
+            let input = stdin.unwrap();
             let time = cmd_time();
             let (cmd, vec) = separate(&input);
             let ecode = match cmd {
@@ -37,12 +32,12 @@ fn main() {
     }
 }
 
-fn read() -> Option<String> {
-    let mut input: String = String::new();
+pub fn read() -> Option<String> {
+    // let mut input: String = String::new();
     prompt();
-    let mut stdin = stdin();
+    let stdin = stdin();
     let mut stdin = stdin.lock();
-    input = stdin.read_line().unwrap().unwrap();
+    let input = stdin.read_line().unwrap().unwrap();
     return Some(input);
 }
 

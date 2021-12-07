@@ -44,10 +44,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "libc"
-version = "0.2.105"
+name = "is_executable"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "869d572136620d55835903746bcb5cdc54cb2851fd0aeec53220b4bb65ef3013"
+checksum = "fa9acdc6d67b75e626ad644734e8bc6df893d9cd2a834129065d3dd6158ea9c8"
+dependencies = [
+ "winapi",
+]
+
+[[package]]
+name = "libc"
+version = "0.2.109"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f98a04dce437184842841303488f70d0188c5f51437d2a834dc097eafa909a01"
 
 [[package]]
 name = "log"
@@ -117,6 +126,7 @@ version = "0.1.0"
 dependencies = [
  "home",
  "hostname",
+ "is_executable",
  "regex",
  "termion",
  "users",

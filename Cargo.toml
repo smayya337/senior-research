@@ -12,6 +12,7 @@ repository = "https://github.com/smayya337/senior-research"
 [dependencies]
 home = "0.5.3"
 hostname = "0.3.1"
+is_executable = "1.0.1"
 regex = "1.5.4"
 termion = "1.5.6"
 users = "0.11.0"
