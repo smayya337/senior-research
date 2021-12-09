@@ -12,12 +12,12 @@ pub fn exec(command: &str, args: Vec<&str>) -> i32 {
     let canon = canonical_path(&command);
     let path = Path::new(&canon);
     if path.is_file() {
-        if path.is_executable() {
-            return read_from_script(command, args);
+        return if path.is_executable() {
+            read_from_script(command, args)
         } else {
-            println!("{} is not executable", command);
-            return 126;
-        }
+            println!("{}: permission denied: {}", env!("CARGO_PKG_NAME"), command);
+            126
+        };
     }
     return match command {
         "cd" => {
@@ -58,12 +58,12 @@ fn cd(dest: Option<&&str>) -> i32 {
 }
 
 fn info() -> i32 {
-    let name = env!("CARGO_PKG_NAME");
-    let desc = env!("CARGO_PKG_DESCRIPTION");
-    let version = env!("CARGO_PKG_VERSION");
-    let authors = str::replace(env!("CARGO_PKG_AUTHORS"), ":", ", ");
-    let license = env!("CARGO_PKG_LICENSE");
-    let repo = env!("CARGO_PKG_REPOSITORY");
+    let name: &'static str = env!("CARGO_PKG_NAME");
+    let desc: &'static str = env!("CARGO_PKG_DESCRIPTION");
+    let version: &'static str = env!("CARGO_PKG_VERSION");
+    let authors: String = str::replace(env!("CARGO_PKG_AUTHORS"), ":", ", ");
+    let license: &'static str = env!("CARGO_PKG_LICENSE");
+    let repo: &'static str = env!("CARGO_PKG_REPOSITORY");
     println!("{}", name);
     println!("{}", desc);
     println!("Version {}", version);
@@ -79,7 +79,7 @@ fn urmom() -> i32 {
     0
 }
 
-fn read_from_script(script: &str, args: Vec<&str>) -> i32 {
+fn read_from_script(script: &str, _args: Vec<&str>) -> i32 {
     let filepath = canonical_path(&script);
     let file = OpenOptions::new().read(true).open(filepath).unwrap();
     let lines = BufReader::new(file).lines();

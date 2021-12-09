@@ -2,7 +2,6 @@ use crate::parser::canonical_path;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::io::BufReader;
-use std::iter::Enumerate;
 use std::time::SystemTime;
 
 pub fn write_history(time: u64, command: &str) {

@@ -11,9 +11,17 @@ use std::env;
 use std::io::{stdin, stdout, Write};
 use termion::input::TermRead;
 
+use std::io;
+use std::thread;
+use std::time;
+
+use termion;
+use termion::cursor;
+use termion::raw::IntoRawMode;
+
 fn main() {
     loop {
-        let stdin: Option<String> = read();
+        let stdin: Option<String> = new_read();
         if stdin.is_some() {
             let input = stdin.unwrap();
             let time = cmd_time();
@@ -34,14 +42,15 @@ fn main() {
 
 pub fn read() -> Option<String> {
     // let mut input: String = String::new();
-    prompt();
+    let prompt = prompt();
+    print!("{}", prompt);
     let stdin = stdin();
     let mut stdin = stdin.lock();
     let input = stdin.read_line().unwrap().unwrap();
     return Some(input);
 }
 
-fn prompt() {
+fn prompt() -> String {
     let username = users::get_current_username().unwrap();
     let host = hostname::get().unwrap();
     let homedir = home::home_dir()
@@ -50,13 +59,54 @@ fn prompt() {
         .to_string();
     let cwd_buf = env::current_dir().unwrap();
     let cwd = cwd_buf.to_str().unwrap().replace(&homedir, "~");
-    let stdout = stdout();
-    let mut stdout = stdout.lock();
-    print!(
+    format!(
         "{}@{} {} $ ",
         username.to_str().unwrap(),
         host.to_str().unwrap(),
         cwd
-    );
-    stdout.flush().unwrap();
+    )
+}
+
+fn new_read() -> Option<String> {
+    // Set terminal to raw mode to allow reading stdin one key at a time
+    let mut stdout = io::stdout().into_raw_mode().unwrap();
+    print!("{}", prompt());
+
+    // Use asynchronous stdin
+    let mut stdin = termion::async_stdin().keys();
+
+    // Our string
+    let mut cmd = String::new();
+
+    loop {
+        // Read input (if any)
+        let input = stdin.next();
+
+        // If a key was pressed
+        if let Some(Ok(key)) = input {
+            match key {
+                // Exit if 'Ctrl+c' is pressed
+                termion::event::Key::Ctrl('c') => break,
+                // Quit everything if 'Ctrl+d' is pressed
+                termion::event::Key::Ctrl('d') => return Some(String::from("exit")),
+                // Return command if 'Enter' is pressed
+                termion::event::Key::Char('\n') => {
+                    write!(stdout, "\n");
+                    return Some(cmd);
+                }
+                termion::event::Key::Backspace => {
+                    cmd.pop();
+                }
+                termion::event::Key::Char(x) => {
+                    cmd.push(x);
+                    write!(stdout, "{}", x).unwrap();
+
+                    stdout.lock().flush().unwrap();
+                }
+                _ => {}
+            }
+        }
+        thread::sleep(time::Duration::from_millis(50));
+    }
+    None
 }
