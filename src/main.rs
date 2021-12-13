@@ -17,6 +17,7 @@ use std::time;
 
 use termion;
 use termion::cursor;
+use termion::cursor::DetectCursorPos;
 use termion::raw::IntoRawMode;
 
 fn main() {
@@ -89,18 +90,24 @@ fn new_read() -> Option<String> {
                 termion::event::Key::Ctrl('c') => break,
                 // Quit everything if 'Ctrl+d' is pressed
                 termion::event::Key::Ctrl('d') => return Some(String::from("exit")),
+                // Clear screen if 'Ctrl-l' is pressed
+                termion::event::Key::Ctrl('l') => {
+                    write!(stdout, "{}", termion::clear::All);
+                    stdout.lock().flush().unwrap();
+                }
                 // Return command if 'Enter' is pressed
                 termion::event::Key::Char('\n') => {
-                    write!(stdout, "\n");
+                    write!(stdout, "\r\n");
+                    stdout.suspend_raw_mode();
                     return Some(cmd);
                 }
                 termion::event::Key::Backspace => {
                     cmd.pop();
+                    write!(stdout, "{}{}", " ", termion::cursor::Left(1));
                 }
                 termion::event::Key::Char(x) => {
                     cmd.push(x);
                     write!(stdout, "{}", x).unwrap();
-
                     stdout.lock().flush().unwrap();
                 }
                 _ => {}
