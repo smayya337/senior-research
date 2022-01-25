@@ -41,16 +41,6 @@ fn main() {
     }
 }
 
-pub fn read() -> Option<String> {
-    // let mut input: String = String::new();
-    let prompt = prompt();
-    print!("{}", prompt);
-    let stdin = stdin();
-    let mut stdin = stdin.lock();
-    let input = stdin.read_line().unwrap().unwrap();
-    return Some(input);
-}
-
 fn prompt() -> String {
     let username = users::get_current_username().unwrap();
     let host = hostname::get().unwrap();
@@ -71,7 +61,8 @@ fn prompt() -> String {
 fn new_read() -> Option<String> {
     // Set terminal to raw mode to allow reading stdin one key at a time
     let mut stdout = io::stdout().into_raw_mode().unwrap();
-    print!("{}", prompt());
+    write!(stdout, "{}", prompt());
+    stdout.lock().flush().unwrap();
 
     // Use asynchronous stdin
     let mut stdin = termion::async_stdin().keys();
@@ -87,7 +78,10 @@ fn new_read() -> Option<String> {
         if let Some(Ok(key)) = input {
             match key {
                 // Exit if 'Ctrl+c' is pressed
-                termion::event::Key::Ctrl('c') => break,
+                termion::event::Key::Ctrl('c') => {
+                    write!(stdout, "\r\n");
+                    break;
+                }
                 // Quit everything if 'Ctrl+d' is pressed
                 termion::event::Key::Ctrl('d') => return Some(String::from("exit")),
                 // Clear screen if 'Ctrl-l' is pressed
