@@ -1,0 +1,118 @@
+\documentclass[12pt]{article}
+
+%
+%Margin - 1 inch on all sides
+%
+\usepackage[letterpaper]{geometry}
+\usepackage{times}
+\geometry{top=1.0in, bottom=1.0in, left=1.0in, right=1.0in}
+
+%
+%Doublespacing
+%
+\usepackage{setspace}
+\doublespacing
+
+%
+%Rotating tables (e.g. sideways when too long)
+%
+\usepackage{rotating}
+
+
+%
+%Fancy-header package to modify header/page numbering (insert last name)
+%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{} 
+\chead{} 
+\rhead{} 
+\lfoot{} 
+\cfoot{} 
+\rfoot{} 
+\renewcommand{\headrulewidth}{0pt} 
+\renewcommand{\footrulewidth}{0pt} 
+%To make sure we actually have header 0.5in away from top edge
+%12pt is one-sixth of an inch. Subtract this from 0.5in to get headsep value
+\setlength\headsep{0.333in}
+
+%
+%Add space between paragraphs - NOT MLA
+%
+\setlength{\parskip}{12pt}
+
+%
+%Works cited environment
+%(to start, use \begin{workscited...}, each entry preceded by \bibent)
+	% - from Ryan Alcock's MLA style file
+	%
+	
+	\newcommand{\bibent}{\noindent \hangindent 40pt}
+	\newenvironment{workscited}{}{\newpage }
+	
+	
+	%
+	%Begin document
+	%
+	\begin{document}
+		\begin{flushleft}
+			
+			%%%%First page name, class, etc
+			Shreyas Mayya\\
+			Computer Systems Lab\\
+			4 February 2022\\
+			Kosek\\
+			
+			
+			%%%%Title
+			\begin{center}
+				{\huge Project Background\par}
+			\end{center}
+			
+			
+			%%%%Changes paragraph indentation to 0.5in
+			%%%%\setlength{\parindent}{0.5in}
+			%%%%Set to 0 - IMPROPER MLA
+			\setlength{\parindent}{0pt}
+			%%%%Begin body of paper here
+			
+			A shell refers to any program that allows a user to interact with a computer's operating system. In general usage, the term is mostly used to refer to a command-line shell (or command-line interpreter). These programs provide an interface for the user to input commands following a specific syntax, then parse and evaluate the output. Many also offer the ability to read commands from a script, as well as features like redirection and pipelines.
+			
+			The first shell for Unix was developed by Ken Thompson in 1971. It operated as a standalone user program and achieved a compact size by keeping functions in separate programs, such as \verb|glob| (which handled parameter expansion) and \verb|if| statements. The Thompson shell is notable for introducing the file redirection syntax that is ubiquitous among Unix shells today, using symbols like \verb|<|, \verb|>|, and \verb|>>| to pipe command output into files. Another major development came in 1977, when Stephen Bourne created the shell that bears his name. The Bourne shell added scripting capabilities to traditional interactive functions, with more advanced control structures, as well as features such as command substitution. The Bourne shell serves as the ancestor of many modern Unix shells, including \verb|bash|, the Bourne-again shell, which is the default on many Unix-based operating systems. Other notable shells include the C shell \verb|csh|, the Korn shell \verb|ksh|, and the Z shell \verb|zsh|, which all include additional features and syntax variations. Unix shells have traditionally been written in the C programming language, which was originally developed to be the language of choice for Unix.
+
+			Unix in the context of this project refers to a family of operating systems derived from and inspired by the Unix operating system. Unix was originally written in 1969 at AT\&T Bell Labs by Ken Thompson, Dennis Ritchie, and their collaborators for the DEC PDP-7 minicomputer (“History”). Its derivatives include the BSD family of operating systems. Unix-inspired operating systems include the Linux family of operating systems.
+
+			BSD refers both to the original Berkeley Software Distribution (BSD), released in 1978 by the University of California, Berkeley, and its derivatives. BSD was derived from the source code of Bell Labs Unix, and over time gained improvements including \verb|ex|, a new version of the Unix editor \verb|ed|, and the C shell \verb|csh|. BSD's most notable accomplishment was rewriting much of the operating system to remove AT\&T's code, which was under a restrictive license. This allowed for the open-sourcing of BSD and other Unix-based operating systems. BSD's derivatives include FreeBSD, NetBSD, OpenBSD, and DragonFlyBSD.
+			
+			Linux can refer to the Linux operating system, written by Linus Torvalds in 1991, or more commonly to the family of operating systems derived from the original Linux and using the Linux kernel. Linux was originally written by Torvalds for the x86 platform as an experiment regarding the features available to such CPUs, and as such was confined to that platform during its first years of development (Torvalds 2). The first successful port of Linux to a different CPU architecture was to the Motorola 680x0 family, and since then Linux has become famous for its portability, with Linux ports available for most major architectures. The Linux kernel is a monolithic system (in contrast to microkernels, which are made up of smaller kernels that work in harmony), and Linux's main goals include simplicity, efficiency, and compatibility (Torvalds 7). Linux is Unix-inspired; it is not derived directly from the original Unix or a derivative, but aims to follow Unix standards and provide all the relevant Unix behavior expected of it by its users (Torvalds 17).
+			
+			Rust is a programming language for “developing reliable and efficient systems” ~\cite{rust}. It is intended for systems programming and aims to give users “control over the running time and memory usage of their programs” (Matsakis and Klock 103) while still offering memory safety by eschewing such traditional features as a garbage collector (which aims to recover no-longer-referenced memory) in favor of a system of ownership. The ownership system provides a framework for passing objects and references to objects to various owners in the program, so that referenced objects can be deallocated when the owner is (Matsakis and Klock 103).
+			
+			{\large References\par}
+			%%%%Works cited
+			\begin{workscited}
+				
+				\bibent
+				“History and Timeline.” \textit{The UNIX System -- History and Timeline -- UNIX History}, The Open
+				Group, https://unix.org/what\_is\_unix/history\_timeline.html.
+				
+				\bibent
+				Jones, M. “Evolution of Shells in Linux.” \textit{IBM Developer}, IBM, 6 Dec. 2011,
+				https://developer.ibm.com/tutorials/l-linux-shells/.
+				
+				\bibent
+				Matsakis, Nicholas D., and Felix S. Klock. “The Rust Language.” \textit{Proceedings of the 2014 ACM
+					SIGAda Annual Conference on High Integrity Language Technology}, Dec. 2014, pp. 
+				103-104., https://doi.org/10.1145/2663171.2663188. 
+				
+				\bibent
+				Torvalds, Linus Benedict. \textit{Linux: A Portable Operating System}, University of Helsinki,
+				University of Helsinki, 10 Apr. 2019,
+				https://www.cs.helsinki.fi/u/kutvonen/index\_files/linus.pdf.
+				Accessed 12 Oct. 2021.
+				
+			\end{workscited}
+			
+		\end{flushleft}
+	\end{document}
+	\}
