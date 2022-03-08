@@ -46,7 +46,9 @@ fn cd(dest: Option<&&str>) -> i32 {
         Some(x) => {
             let canon = canonical_path(x);
             let new_path = Path::new(&canon);
+            // let new_path = canonicalize(Path::new(x));
             let chdir = env::set_current_dir(&new_path);
+            // let chdir = env::set_current_dir(new_path.unwrap());
             if chdir.is_ok() {
                 0
             } else {
