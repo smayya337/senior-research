@@ -11,4 +11,4 @@
 target
 # TeX compilation
 out
-tex/**/**.{aux,bib,log,pdf,synctex.gz}
+tex/**
