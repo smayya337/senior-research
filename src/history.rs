@@ -21,7 +21,7 @@ pub fn write_history(time: u64, command: &str) {
 pub fn cmd_time() -> u64 {
     SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
-        .expect("This happened before the Unix Epoch!")
+        .unwrap()
         .as_secs()
 }
 

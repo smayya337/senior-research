@@ -11,10 +11,7 @@ pub fn separate(input: &str) -> (Option<&str>, Vec<&str>) {
 }
 
 pub fn canonical_path(x: &&str) -> String {
-    let homedir = home::home_dir()
-        .expect("No home dir set!")
-        .display()
-        .to_string();
+    let homedir = home::home_dir().unwrap().display().to_string();
     let mut canon = String::from(*x);
     if x.starts_with(&"~") {
         canon = canon.replace("~", &homedir);
