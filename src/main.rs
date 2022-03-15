@@ -4,7 +4,6 @@ mod exec;
 mod history;
 mod parser;
 
-use std::cmp::min;
 use crate::exec::exec;
 use crate::history::{cmd_time, read_history, write_history};
 use crate::parser::separate;
@@ -82,6 +81,7 @@ fn main() {
                     if cmd.is_some() && cmd.unwrap().ne("history") {
                         write_history(time, &input);
                         history.push(input);
+                        history_pos = history.len();
                     }
                     input = String::new();
                     beginning_of_line = prompt().len() as u16;
@@ -118,39 +118,42 @@ fn main() {
                     }
                 }
                 termion::event::Key::Up => {
+                    write!(
+                        stdout,
+                        "{}{}{}",
+                        termion::clear::CurrentLine,
+                        termion::cursor::Left(horiz_pos),
+                        prompt()
+                    )
+                    .unwrap();
                     if history_pos > 0 {
                         history_pos -= 1;
-                        write!(stdout, "{}", termion::cursor::Left(horiz_pos)); // TODO: it's not clearing everything - don't use the implementation in Down
-                        for _i in [0..length_of_line] {
-                            write!(stdout, " ");
-                        }
-                        write!(stdout, "{}", termion::cursor::Left(length_of_line));
-                        write!(stdout, "{}", prompt()).unwrap();
                         input = history[history_pos].clone();
-                        length_of_line = beginning_of_line + input.len() as u16;
-                        horiz_pos = length_of_line;
-                        write!(stdout, "{}", input).unwrap();
+                    } else {
+                        input = history[0].clone();
                     }
+                    length_of_line = beginning_of_line + input.len() as u16;
+                    horiz_pos = length_of_line;
+                    write!(stdout, "{}", input).unwrap();
                 }
                 termion::event::Key::Down => {
-                    if history_pos < history.len() {
+                    write!(
+                        stdout,
+                        "{}{}{}",
+                        termion::clear::CurrentLine,
+                        termion::cursor::Left(horiz_pos),
+                        prompt()
+                    )
+                    .unwrap();
+                    if history_pos < history.len() - 1 {
                         history_pos += 1;
-                        write!(stdout, "{}", termion::cursor::Left(horiz_pos - beginning_of_line + 1));
-                        for _i in [0..length_of_line - beginning_of_line + 1] {
-                            write!(stdout, " ");
-                        }
-                        if history_pos == history.len() {
-                            input = String::new();
-                        }
-                        else {
-                            input = history[history_pos].clone();
-                        }
-                        length_of_line = beginning_of_line + input.len() as u16;
-                        let new_horiz = min(horiz_pos, length_of_line);
-                        write!(stdout, "{}", termion::cursor::Left(horiz_pos - new_horiz)).unwrap();
-                        horiz_pos = new_horiz;
+                        input = history[history_pos].clone();
                         write!(stdout, "{}", input).unwrap();
+                    } else {
+                        input = String::new();
                     }
+                    length_of_line = beginning_of_line + input.len() as u16;
+                    horiz_pos = length_of_line;
                 }
                 termion::event::Key::Char(x) => {
                     input.push(x);
@@ -169,10 +172,7 @@ fn main() {
 fn prompt() -> String {
     let username = users::get_current_username().unwrap();
     let host = hostname::get().unwrap();
-    let homedir = home::home_dir()
-        .expect("No home dir set!")
-        .display()
-        .to_string();
+    let homedir = home::home_dir().unwrap().display().to_string();
     let cwd_buf = env::current_dir().unwrap();
     let cwd = cwd_buf.to_str().unwrap().replace(&homedir, "~");
     format!(
