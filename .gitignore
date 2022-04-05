@@ -11,4 +11,13 @@
 target
 # TeX compilation
 out
-tex/**
+tex/*/*.aux
+tex/*/*.bbl
+tex/*/*.blg
+tex/*/*.log
+tex/*/*.out
+tex/*/*.pdf
+tex/*/*.toc
+tex/*/*.gz
+tex/*/*.fls
+tex/*/*.fdb_latexmk
