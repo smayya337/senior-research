@@ -27,7 +27,12 @@ pub fn cmd_time() -> u64 {
 
 pub fn read_history() -> Vec<String> {
     let filepath = canonical_path(&"~/.shell_history");
-    let file = OpenOptions::new().read(true).open(filepath).unwrap();
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(filepath)
+        .unwrap();
     let lines = BufReader::new(file).lines();
     let mut shell_history: Vec<String> = Vec::new();
     for line in lines {
